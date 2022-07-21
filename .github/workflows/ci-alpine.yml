@@ -1,11 +1,11 @@
-name: Publish Docker image
+name: Publish Docker image alpine
 
 on:
   push:
     branches:
       - main
     paths:
-      - 'docker/**'
+      - 'docker-alpine/**'
   schedule:
     - cron: '0 0 * * 0'
 
@@ -29,7 +29,7 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v3
         with:
-          context: ./docker
+          context: ./docker-alpine
           push: true
-          tags: kaozaza2/laravel-environment:latest
+          tags: kaozaza2/laravel-environment:alpine
 
