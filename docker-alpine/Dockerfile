@@ -1,4 +1,4 @@
-FROM alpine:3.15
+FROM php:8.1-cli-alpine3.15
 
 ARG NODE_VERSION=16.16.0
 ARG YARN_VERSION=1.22.19
@@ -7,21 +7,22 @@ RUN echo "@main http://dl-cdn.alpinelinux.org/alpine/v3.15/main" >> /etc/apk/rep
  && echo "@community http://dl-cdn.alpinelinux.org/alpine/v3.15/community" >> /etc/apk/repositories \
  && apk update
 
-RUN apk add --no-cache tar bind-tools curl ca-certificates \
+RUN apk add --no-cache tar bind-tools curl ca-certificates libmemcached \
     zip unzip git supervisor sqlite libcap libpng-dev python2 \
- && apk add --no-cache php8-cli php8-dev \
-    php8-pgsql php8-sqlite3 php8-gd php8-pear \
-    php8-curl php8-imap php8-mbstring php8-xdebug \
-    php8-xml php8-zip php8-bcmath php8-soap \
-    php8-intl php8-ldap php8-redis \
- && pecl install openswoole \
- && pecl install msgpack \
- && pecl install mysql \
+ && docker-php-ext-configure gd \
+ && pecl install swoole \
  && pecl install pcov \
- && pecl install readline \
- && pecl install memcached \
+ && pecl install msgpack \
+ && pecl install redis \
  && pecl install igbinary \
+ && pecl install xdebug \
+ && docker-php-ext-enable xdebug swoole pcov msgpack redis igbinary \
+ && docker-php-ext-install mysql ldap intl zip bcmath soap imap \
+ && pecl install memcached \
+ && docker-php-ext-enable memcached \
  && php -r "readfile('https://getcomposer.org/installer');" | php -- --install-dir=/usr/bin/ --filename=composer
+
+COPY xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 
 RUN curl -fsSLO --compressed "https://unofficial-builds.nodejs.org/download/release/v$NODE_VERSION/node-v$NODE_VERSION-linux-x64-musl.tar.xz" \
  && tar -xJf "node-v$NODE_VERSION-linux-x64-musl.tar.xz" -C /usr/local --strip-components=1 --no-same-owner \
@@ -34,3 +35,6 @@ RUN curl -fsSLO --compressed "https://yarnpkg.com/downloads/$YARN_VERSION/yarn-v
  && ln -s /opt/yarn-v$YARN_VERSION/bin/yarn /usr/local/bin/yarn \
  && ln -s /opt/yarn-v$YARN_VERSION/bin/yarnpkg /usr/local/bin/yarnpkg \
  && rm -f yarn-v$YARN_VERSION.tar.gz
+
+ENTRYPOINT []
+CMD []
