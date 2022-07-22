@@ -32,5 +32,4 @@ RUN curl -fsSLO --compressed "https://yarnpkg.com/downloads/$YARN_VERSION/yarn-v
  && rm -f yarn-v$YARN_VERSION.tar.gz \
  && yarn --version
 
-RUN set -xe \
- && apk add --no-cache postgresql$POSTGRES_VERSION-client
+RUN apk add --no-cache mysql-client postgresql$POSTGRES_VERSION-client
