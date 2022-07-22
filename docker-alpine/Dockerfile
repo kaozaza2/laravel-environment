@@ -12,6 +12,8 @@ RUN set -xe \
     php81-intl php81-ldap php81-pecl-msgpack php81-pecl-igbinary \
     php81-pecl-redis php81-pecl-swoole php81-pecl-memcached \
     php81-pecl-xdebug php81-tokenizer php81-pdo php81-pdo_mysql \
+    php81-ctype php81-fileinfo php81-openssl php81-dom php81-xmlwriter \
+    php81-simplexml \
  && ln -s /usr/bin/php81 /usr/bin/php \
  && php --version \
  && php -r "readfile('https://getcomposer.org/installer');" | php -- --install-dir=/usr/bin/ --filename=composer \
